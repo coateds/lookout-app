@@ -2,9 +2,9 @@
   "name": "Lookout Dev Container",
   "build": {
     "dockerfile": "Dockerfile",
-    "context": "."
+    "context": ".."
   },
-"runArgs": ["--env-file", "${workspaceFolder}/.env"],
+// "runArgs": ["--env-file", "${workspaceFolder}/.env"],
 "customizations": {
   "vscode": {
     "settings": {
@@ -19,7 +19,7 @@
   }
 },
   "forwardPorts": [5000],
-  "postCreateCommand": "pip install -r .devcontainer/requirements.txt",
+  "postCreateCommand": "pip install -r requirements.txt",
   "remoteUser": "vscode",
   "workspaceFolder": "/workspaces/lookout-app"
 }

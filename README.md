@@ -22,7 +22,14 @@ CoPilot thread:  GitHub actions deploy lookout app
 - Use docker ps -a to see the containers that are running (or exited):
   - if the containers show as exited and they need to be rebuilt, use docker compose down first.
 
+## tagged a "good" build
+- git add .
+- git commit -m "Stable local dev setup: Dockerfile, .env handling, requirements.txt"
+- git tag -a local-dev-stable-v1 -m "Stable local dev environment with working Docker build"
+- git push origin master
+- git push origin local-dev-stable-v1
 
+- To checkout this exact state later: git checkout local-dev-v1
 
 
 SSMS access to Azure SQL DB

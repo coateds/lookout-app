@@ -16,5 +16,5 @@ RUN curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor
     apt-get update && \
     ACCEPT_EULA=Y apt-get install -y msodbcsql18
 
-COPY .devcontainer/requirements.txt .
+COPY ../requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
