@@ -1,5 +1,7 @@
 # Multi environment DEVOps pipeline for Flask App with SQL Database
 
+CoPilot thread:  GitHub actions deploy lookout app
+
 ## Dev environment
 - Two Linux containers
   - Custom Flask app container with code and connection to ...
