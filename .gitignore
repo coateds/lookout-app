@@ -1,0 +1,50 @@
+# 🔐 Environment files
+.env
+*.env
+.env.*
+
+# 🐍 Python artifacts
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.log
+
+# 📦 Virtual environments
+venv/
+env/
+.venv/
+.python-version
+
+# 🐳 Docker artifacts
+*.pid
+*.db
+*.sqlite3
+*.tar
+*.gz
+
+# 📦 VSCode Dev Containers
+.devcontainer/
+.vscode/
+.vscode-server/
+
+# 📄 OS-specific files
+.DS_Store
+Thumbs.db
+
+# 🧪 Test coverage and reports
+htmlcov/
+coverage.xml
+*.cover
+*.py,cover
+
+# 📦 Build artifacts
+dist/
+build/
+*.egg-info/
+*.egg
+
+# 🧰 Misc
+*.bak
+*.swp
+*.tmp

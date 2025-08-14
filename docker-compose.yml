@@ -1,0 +1,38 @@
+
+services:
+  flask-app:
+    build:
+      context: .
+      dockerfile: .devcontainer/Dockerfile
+
+    volumes:
+      - .:/workspaces/lookout-app
+    ports:
+      - "5000:5000"
+    depends_on:
+      - sqlserver
+    command: python3 -m flask run --host=0.0.0.0 --port=5000
+
+    environment:
+      - FLASK_ENV=development
+      - FLASK_APP=app.main
+      - FLASK_DEBUG=1
+      - SQL_SERVER_HOST=sqlserver
+      - SQL_SERVER_PORT=1433
+      - SQL_SERVER_USER=sa
+      - SQL_SERVER_PASSWORD=YourStrong!Passw0rd
+      - SQL_SERVER_DB=lookoutdb
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sqlserver
+    ports:
+      - "1433:1433"
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=YourStrong!Passw0rd
+    healthcheck:
+      test: ["CMD", "/opt/mssql-tools/bin/sqlcmd", "-S", "localhost", "-U", "sa", "-P", "YourStrong!Passw0rd", "-Q", "SELECT 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
