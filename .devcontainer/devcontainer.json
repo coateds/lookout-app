@@ -2,7 +2,7 @@
   "name": "Lookout Dev Container",
   "build": {
     "dockerfile": "Dockerfile",
-    "context": ".."
+    "context": "."
   },
 "runArgs": ["--env-file", "${workspaceFolder}/.env"],
 "customizations": {
