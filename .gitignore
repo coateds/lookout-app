@@ -24,7 +24,7 @@ env/
 *.gz
 
 # 📦 VSCode Dev Containers
-.devcontainer/
+# .devcontainer/
 .vscode/
 .vscode-server/
 
