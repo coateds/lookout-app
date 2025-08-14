@@ -3,6 +3,9 @@
 *.env
 .env.*
 
+# ✅ Allow safe template
+!.env.template
+
 # 🐍 Python artifacts
 __pycache__/
 *.py[cod]
