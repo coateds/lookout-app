@@ -1,0 +1,14 @@
+Build out Dev environment for Lookout App on my laptop:
+  ✔ Flask and SQL Server Containers @done(25-08-13 19:53)
+  ✔ Connect to both with SSMS and VSCode Dev Containers @done(25-08-13 19:53)
+  ✔ Orchestrate with Docker Compose @done(25-08-13 19:54)
+  ✔ Simple smoke test localhost:5000/home and /ping @done(25-08-13 19:55)
+  ✔ Protect Psswords and push to lookout-app repo @done(25-08-13 19:56)
+
+Use GitHub Actions to deploy the dev environment to GitHub Codespaces:
+
+Create a GitHub Action that:
+• 	✅ Uses the same Dockerfile and  as your local 
+• 	✅ Installs dependencies and sets up the Flask app
+• 	✅ Optionally runs tests or a health check
+• 	✅ Prepares the environment for coding or previewing in Codespaces

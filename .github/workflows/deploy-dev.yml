@@ -1,0 +1,36 @@
+name: Setup Dev Environment (Codespaces-Compatible)
+
+on:
+  workflow_dispatch:  # Manual trigger from GitHub UI
+
+jobs:
+  setup-dev:
+    runs-on: ubuntu-latest
+    environment: development
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build dev container
+        run: |
+          docker build -f .devcontainer/Dockerfile -t lookout-dev .
+
+      - name: Run container and install dependencies
+        run: |
+          docker run --rm \
+            -v ${{ github.workspace }}:/workspace \
+            -w /workspace \
+            lookout-dev \
+            bash -c "pip install -r .devcontainer/requirements.txt && python app/main.py"
+
+      - name: Optional: Run tests
+        run: |
+          docker run --rm \
+            -v ${{ github.workspace }}:/workspace \
+            -w /workspace \
+            lookout-dev \
+            pytest
