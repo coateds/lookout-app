@@ -4,7 +4,13 @@
     "dockerfile": "Dockerfile",
     "context": ".."
   },
-// "runArgs": ["--env-file", "${workspaceFolder}/.env"],
+"containerEnv": {
+  "ENV": "codespaces",
+  "SQL_SERVER_USER_CODESPACES": "${{ secrets.SQL_SERVER_USER_CODESPACES }}",
+  "SQL_SERVER_PASSWORD_CODESPACES": "${{ secrets.SQL_SERVER_PASSWORD_CODESPACES }}",
+  "SQL_SERVER_CONTAINER_SERVICE_CODESPACES": "${{ secrets.SQL_SERVER_CONTAINER_SERVICE_CODESPACES }}",
+  "PYTHONPATH": "/workspaces/lookout-app"
+},
 "customizations": {
   "vscode": {
     "settings": {

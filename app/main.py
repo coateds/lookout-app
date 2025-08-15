@@ -3,6 +3,7 @@ import pyodbc
 from sqlalchemy import create_engine
 from dotenv import load_dotenv
 import os
+from app.config import load_config
 
 app = Flask(__name__)
 
