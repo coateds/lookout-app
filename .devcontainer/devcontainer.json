@@ -34,7 +34,7 @@
   }
 },
   "forwardPorts": [5000],
-  "postCreateCommand": "pip install -r requirements.txt",
+  "postCreateCommand": "apt-get update && apt-get install -y gh && pip install -r requirements.txt",
   "remoteUser": "vscode",
   "workspaceFolder": "/workspaces/lookout-app"
 }
