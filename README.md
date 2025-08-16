@@ -2,7 +2,7 @@
 
 CoPilot thread:  GitHub actions deploy lookout app
 
-## Dev environment
+## Dev environment - Local
 - Two Linux containers
   - Custom Flask app container with code and connection to ...
   - A pre-built SQL server container
@@ -21,6 +21,32 @@ CoPilot thread:  GitHub actions deploy lookout app
   - Option 2 > in the terminal where docker compose up --build was run, press ctrl + c and then enter to see the containers shutting down.
 - Use docker ps -a to see the containers that are running (or exited):
   - if the containers show as exited and they need to be rebuilt, use docker compose down first.
+
+## Dev Environment - codespaces
+export FLASK_APP=app/main.py
+flask run --host=0.0.0.0 --port=5000
+
+This should produce an output in the terminal indicating that Flask is running
+
+go to the ports tab of the codespaces terminal pane
+for a link to the Flask app in a browser
+
+## GitHub Secrets
+
+🧭 Environment Overview
+| Environment    | Secrets Source | Notes                            | Secret Type
+| Dev Local      | .env file      | Local-only, not synced to GitHub | .env
+| Dev Codespaces | GitHub Secrets | Injected via devcontainer.json   | GH repository secret
+| Staging        | GitHub Secrets | Used in GitHub Actions workflows | GH environment secret (stg)
+| Production     | GitHub Secrets | Used in GitHub Actions workflows | GH environment secret (prod)
+
+
+## Debugging in the codespaces environment
+It is possible to simply write code in the codespaces VSCode like normal. To Rerun the Flask application:
+- export FLASK_APP=app.main:app
+- Running on http://0.0.0.0:5000
+
+
 
 ## tagged a "good" build
 - git add .

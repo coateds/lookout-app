@@ -7,6 +7,9 @@ services:
 
     volumes:
       - .:/workspaces/lookout-app
+      - .:/app
+      - ./.env:/app/.env  # 👈 Mount .env file
+
     ports:
       - "5000:5000"
     depends_on:
@@ -17,11 +20,14 @@ services:
       - FLASK_ENV=development
       - FLASK_APP=app.main
       - FLASK_DEBUG=1
-      - SQL_SERVER_HOST=sqlserver
-      - SQL_SERVER_PORT=1433
-      - SQL_SERVER_USER=sa
-      - SQL_SERVER_PASSWORD=YourStrong!Passw0rd
-      - SQL_SERVER_DB=lookoutdb
+      # - SQL_SERVER_HOST=sqlserver
+      # - SQL_SERVER_PORT=1433
+      # - SQL_SERVER_USER=sa
+      # - SQL_SERVER_PASSWORD=YourStrong!Passw0rd
+      # - SQL_SERVER_DB=lookoutdb
+
+    working_dir: /app
+
 
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest

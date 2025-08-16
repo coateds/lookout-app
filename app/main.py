@@ -7,14 +7,33 @@ from app.config import load_config
 
 app = Flask(__name__)
 
-load_dotenv()
+print("start main.py")
+
+# load_dotenv()
+
+# Map GitHub Secrets to expected env vars
+# os.environ["SQL_SERVER_USER"] = os.getenv("SQL_SERVER_USER_CODESPACES", "")
+# os.environ["SQL_SERVER_PASSWORD"] = os.getenv("SQL_SERVER_PASSWORD_CODESPACES", "")
+
+
+config = load_config()
+print(config)
+
+SQL_SERVER = config["CONTAINER_SERVICE"]
+SQL_USERNAME = config["USER"]
+SQL_PASSWORD = config["PASSWORD"]
+
+#Debug
+print("👤 SQL_SERVER_USER =", SQL_USERNAME)
+print("🔑 SQL_SERVER_PASSWORD =", SQL_PASSWORD)
+#
 
 # Update these values to match your SQL Server setup
 # SQL_SERVER = "sqlserver"
-SQL_SERVER = os.getenv("SQL_SERVER_CONTAINER_SERVICE", "sqlserver")
+# SQL_SERVER = os.getenv("SQL_SERVER_CONTAINER_SERVICE", "sqlserver")
 SQL_DATABASE = "master"
-SQL_USERNAME = os.getenv("SQL_SERVER_USER")
-SQL_PASSWORD = os.getenv("SQL_SERVER_PASSWORD")
+# SQL_USERNAME = os.getenv("SQL_SERVER_USER")
+# SQL_PASSWORD = os.getenv("SQL_SERVER_PASSWORD")
 DRIVER = "ODBC Driver 18 for SQL Server"
 
 print("🔍 SQL_SERVER_CONTAINER_SERVICE =", repr(SQL_SERVER))
@@ -44,6 +63,14 @@ def ping():
 @app.route("/home")
 def home():
     return "Welcome to the SQL Server API!!!??###&&&"
+
+@app.route("/config")
+def config_view():
+    return {
+        "ENV": os.getenv("ENV"),
+        "USER": config["USER"],
+        "CONTAINER_SERVICE": config["CONTAINER_SERVICE"]
+    }
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
