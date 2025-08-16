@@ -17,7 +17,8 @@
       "SQL_SERVER_PASSWORD_CODESPACES",
       "SQL_SERVER_CONTAINER_SERVICE_CODESPACES"
     ]
-  }
+  },
+  "ghcr.io/devcontainers/features/github-cli:1": {}
 },
 "customizations": {
   "vscode": {
