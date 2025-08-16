@@ -6,6 +6,8 @@
   },
 "containerEnv": {
   "ENV": "codespaces",
+  "FLASK_APP": "app.main",
+  "FLASK_ENV": "development",
   "PYTHONPATH": "/workspaces/lookout-app"
 },
 "features": {
