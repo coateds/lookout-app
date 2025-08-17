@@ -69,8 +69,20 @@ def config_view():
     return {
         "ENV": os.getenv("ENV"),
         "USER": config["USER"],
+        "PASSWORD": config["PASSWORD"],
         "CONTAINER_SERVICE": config["CONTAINER_SERVICE"]
     }
+
+@app.route("/db-status")
+def db_status():
+    try:
+        conn = pyodbc.connect(odbc_conn_str, timeout=5)
+        cursor = conn.cursor()
+        cursor.execute("SELECT 1")
+        result = cursor.fetchone()
+        return {"status": "connected", "result": result[0]}
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
