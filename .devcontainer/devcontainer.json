@@ -8,10 +8,10 @@
     "ENV": "codespaces",
     "FLASK_APP": "app.main",
     "FLASK_ENV": "development",
-    "PYTHONPATH": "/workspaces/lookout-app"
-    // "SQL_SERVER_USER": "${{ secrets.SQL_SERVER_USER_CODESPACES }}",
-    // "SQL_SERVER_PASSWORD": "${{ secrets.SQL_SERVER_PASSWORD_CODESPACES }}",
-    // "SQL_SERVER_CONTAINER_SERVICE": "${{ secrets.SQL_SERVER_CONTAINER_SERVICE_CODESPACES }}"
+    "PYTHONPATH": "/workspaces/lookout-app",
+    "SQL_SERVER_USER": "${SQL_SERVER_USER_CODESPACES}",
+    "SQL_SERVER_PASSWORD": "${SQL_SERVER_PASSWORD_CODESPACES}",
+    "SQL_SERVER_CONTAINER_SERVICE": "${SQL_SERVER_CONTAINER_SERVICE_CODESPACES}"
   },
   "customizations": {
     "vscode": {
