@@ -19,9 +19,13 @@ def load_config():
     if env == "codespaces":
 
 
-        config["USER"] = get_env("SQL_SERVER_USER_CODESPACES")
-        config["PASSWORD"] = get_env("SQL_SERVER_PASSWORD_CODESPACES")
+        # config["USER"] = get_env("SQL_SERVER_USER_CODESPACES")
+        # config["PASSWORD"] = get_env("SQL_SERVER_PASSWORD_CODESPACES")
         config["CONTAINER_SERVICE"] = get_env("SQL_SERVER_CONTAINER_SERVICE_CODESPACES", "sqlserver")
+        config["USER"] = os.getenv("SQL_SERVER_USER_CODESPACES")
+        config["PASSWORD"] = os.getenv("SQL_SERVER_PASSWORD_CODESPACES")
+
+
 
     elif env == "local":
         print("Loading local config...")
