@@ -5,8 +5,8 @@ services:
       context: .
       dockerfile: .devcontainer/Dockerfile
 
-    env_file:
-      - .env.codespaces
+    # env_file:
+    #   - .env.codespaces
 
     volumes:
       - .:/workspaces/lookout-app
@@ -26,9 +26,12 @@ services:
       FLASK_ENV: development
       FLASK_APP: app.main
       FLASK_DEBUG: 1
-      SQL_SERVER_USER: $SQL_SERVER_USER_CODESPACES
-      SQL_SERVER_PASSWORD: $SQL_SERVER_PASSWORD_CODESPACES
-      SQL_SERVER_CONTAINER_SERVICE: $SQL_SERVER_CONTAINER_SERVICE_CODESPACES
+      # SQL_SERVER_USER: $SQL_SERVER_USER_CODESPACES
+      # SQL_SERVER_PASSWORD: $SQL_SERVER_PASSWORD_CODESPACES
+      # SQL_SERVER_CONTAINER_SERVICE: $SQL_SERVER_CONTAINER_SERVICE_CODESPACES
+      SQL_SERVER_USER: sa
+      SQL_SERVER_PASSWORD: YourStrong!Passw0rd
+      SQL_SERVER_DB: lookoutdb      
 
     working_dir: /app
 
