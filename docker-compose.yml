@@ -2,13 +2,11 @@
 services:
   flask-app:
     build:
+      context: .
+      dockerfile: .devcontainer/Dockerfile
 
     env_file:
       - .env.codespaces
-
-
-    context: .
-    dockerfile: .devcontainer/Dockerfile
 
     volumes:
       - .:/workspaces/lookout-app
@@ -17,6 +15,7 @@ services:
 
     ports:
       - "5000:5000"
+      
     depends_on:
       - sqlserver
     # command: python3 -m flask run --host=0.0.0.0 --port=5000
@@ -31,9 +30,7 @@ services:
       SQL_SERVER_PASSWORD: $SQL_SERVER_PASSWORD_CODESPACES
       SQL_SERVER_CONTAINER_SERVICE: $SQL_SERVER_CONTAINER_SERVICE_CODESPACES
 
-
     working_dir: /app
-
 
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
