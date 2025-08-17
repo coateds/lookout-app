@@ -27,6 +27,12 @@
     }
   },
   "forwardPorts": [5000, 1433],
-  "postCreateCommand": "pip install -r requirements.txt",
+  // "postCreateCommand": "pip install -r requirements.txt",
+  "postCreateCommand": [
+    "chmod +x .devcontainer/setup-env.sh",
+    "bash .devcontainer/setup-env.sh",
+    "pip install -r requirements.txt"
+  ],
+
   "remoteUser": "vscode"
 }
