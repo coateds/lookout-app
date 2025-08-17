@@ -3,6 +3,15 @@
   "dockerComposeFile": ["../docker-compose.yml"],
   "service": "flask-app",
   "workspaceFolder": "/workspaces/lookout-app",
+  "features": {
+  "ghcr.io/devcontainers/features/github-secrets:1": {
+    "secrets": [
+      "SQL_SERVER_USER_CODESPACES",
+      "SQL_SERVER_PASSWORD_CODESPACES",
+      "SQL_SERVER_CONTAINER_SERVICE_CODESPACES"
+      ]
+    }
+  },
   "containerEnv": {
     "ENV": "codespaces",
     "FLASK_APP": "app.main",
@@ -10,8 +19,7 @@
     "PYTHONPATH": "/workspaces/lookout-app",
     "SQL_SERVER_USER": "${SQL_SERVER_USER_CODESPACES}",
     "SQL_SERVER_PASSWORD": "${SQL_SERVER_PASSWORD_CODESPACES}",
-    "SQL_SERVER_CONTAINER_SERVICE": "${SQL_SERVER_CONTAINER_SERVICE_CODESPACES}"
-
+    "SQL_SERVER_CONTAINER_SERVICE": "${SQL_SERVER_CONTAINER_SERVICE_CODESPACES}"   
   },
   "customizations": {
     "vscode": {
