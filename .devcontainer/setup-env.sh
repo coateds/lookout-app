@@ -3,14 +3,21 @@ set -e
 
 echo "🔧 Generating .env from Codespaces secrets..."
 
-export SQL_SERVER_USER=$(echo $SQL_SERVER_USER_CODESPACES)
-export SQL_SERVER_PASSWORD=$(echo $SQL_SERVER_PASSWORD_CODESPACES)
-export SQL_SERVER_CONTAINER_SERVICE=$(echo $SQL_SERVER_CONTAINER_SERVICE_CODESPACES)
+# Only run in Codespaces
+if [ "$CODESPACES" = "true" ]; then
+  echo "Detected Codespaces environment."
 
-# Write resolved values into .env
-echo "SQL_SERVER_USER=${SQL_SERVER_USER_CODESPACES}" > .env
-echo "SQL_SERVER_PASSWORD=${SQL_SERVER_PASSWORD_CODESPACES}" >> .env
-echo "SQL_SERVER_CONTAINER_SERVICE=${SQL_SERVER_CONTAINER_SERVICE_CODESPACES}" >> .env
+  # Write resolved values into .env
+  cat <<EOF > .env
+SQL_SERVER_USER=${SQL_SERVER_USER_CODESPACES}
+SQL_SERVER_PASSWORD=${SQL_SERVER_PASSWORD_CODESPACES}
+SQL_SERVER_CONTAINER_SERVICE=${SQL_SERVER_CONTAINER_SERVICE_CODESPACES}
+EOF
+
+  echo "✅ .env file created."
+else
+  echo "⚠️ Not in Codespaces. Skipping .env generation."
+fi
 
 # Start Compose
 docker compose up -d
