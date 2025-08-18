@@ -1,0 +1,282 @@
+docker-compose.yml
+    env_file:
+      - .env
+
+
+      # SQL_SERVER_USER: sa
+      # SQL_SERVER_PASSWORD: YourStrong!Passw0rd
+      # SQL_SERVER_DB: lookoutdb
+      SQL_SERVER_USER: ${SQL_SERVER_USER_CODESPACES}
+      SQL_SERVER_PASSWORD: ${SQL_SERVER_PASSWORD_CODESPACES}
+      SQL_SERVER_CONTAINER_SERVICE: ${SQL_SERVER_CONTAINER_SERVICE_CODESPACES}
+
+devcontainer.json
+  "postCreateCommand": "chmod +x .devcontainer/setup-env.sh && . .devcontainer/setup-env.sh && pip install -r requirements.txt",
+
+setup-env.sh
+
+#!/bin/bash
+echo "Running setup-env.sh..." > /tmp/setup-log.txt
+
+# Navigate to workspace root
+cd /workspaces/lookout-app
+
+# Create .env from injected Codespaces secrets
+{
+  echo "SQL_SERVER_USER=${SQL_SERVER_USER_CODESPACES}"
+  echo "SQL_SERVER_PASSWORD=${SQL_SERVER_PASSWORD_CODESPACES}"
+  echo "SQL_SERVER_CONTAINER_SERVICE=${SQL_SERVER_CONTAINER_SERVICE_CODESPACES}"
+} > .env
+
+echo "✅ .env created with injected secrets" >> /tmp/setup-log.txt
+
+config.py
+        config["USER"] = os.getenv("SQL_SERVER_USER_CODESPACES")
+        config["PASSWORD"] = os.getenv("SQL_SERVER_PASSWORD_CODESPACES")
+
+curl http://localhost:5000/home
+
+
+sudo apt update && sudo apt upgrade -y
+sudo apt install docker.io -y
+mkdir -p ~/.docker/cli-plugins
+curl -SL https://github.com/docker/compose/releases/latest/download/docker-compose-linux-x86_64 -o ~/.docker/cli-plugins/docker-compose
+chmod +x ~/.docker/cli-plugins/docker-compose
+
+
+working files:
+
+docker-compose
+*******************************
+services:
+  flask-app:
+    build:
+      context: .
+      dockerfile: .devcontainer/Dockerfile
+
+    env_file:
+      - .env
+
+    volumes:
+      - .:/workspaces/lookout-app
+      - .:/app
+      # - ./.env:/app/.env  # 👈 Mount .env file
+
+    ports:
+      - "5000:5000"
+      
+    depends_on:
+      - sqlserver
+
+    command: flask run --host=0.0.0.0 --port=5000
+
+
+    environment:
+      FLASK_ENV: development
+      FLASK_APP: app.main
+      FLASK_DEBUG: 1
+
+    working_dir: /app
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sqlserver
+    ports:
+      - "1433:1433"
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=YourStrong!Passw0rd
+    healthcheck:
+      test: ["CMD", "/opt/mssql-tools/bin/sqlcmd", "-S", "localhost", "-U", "sa", "-P", "YourStrong!Passw0rd", "-Q", "SELECT 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+*******************************
+
+devcontainer.json
+*******************************
+{
+  "name": "Lookout Dev Container",
+  "secrets": {
+    "SQL_SERVER_USER_CODESPACES": "SQL_SERVER_USER_CODESPACES",
+    "SQL_SERVER_PASSWORD_CODESPACES": "SQL_SERVER_PASSWORD_CODESPACES",
+    "SQL_SERVER_CONTAINER_SERVICE_CODESPACES": "SQL_SERVER_CONTAINER_SERVICE_CODESPACES"
+  },
+  "dockerComposeFile": ["../docker-compose.yml"],
+  "service": "flask-app",
+  "workspaceFolder": "/workspaces/lookout-app",
+  "features": {},
+  "containerEnv": {
+    "ENV": "codespaces",
+    "FLASK_APP": "app.main",
+    "FLASK_ENV": "development",
+    "PYTHONPATH": "/workspaces/lookout-app"
+  },
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "python.defaultInterpreterPath": "/usr/local/bin/python",
+        "terminal.integrated.defaultProfile.linux": "bash"
+      },
+      "extensions": [
+        "ms-python.python",
+        "ms-azuretools.vscode-docker",
+        "ms-vscode.azurecli"
+      ]
+    }
+  },
+  "forwardPorts": [5000, 1433],
+  // "postCreateCommand": "pip install -r requirements.txt",
+  "postCreateCommand": "chmod +x .devcontainer/setup-env.sh && . .devcontainer/setup-env.sh && pip install -r requirements.txt",
+
+  "remoteUser": "vscode"
+}
+*******************************
+
+setup-env.sh
+*******************************
+#!/bin/bash
+set -e
+
+echo "🔧 Generating .env from Codespaces secrets..."
+
+export SQL_SERVER_USER=$(echo $SQL_SERVER_USER_CODESPACES)
+export SQL_SERVER_PASSWORD=$(echo $SQL_SERVER_PASSWORD_CODESPACES)
+export SQL_SERVER_CONTAINER_SERVICE=$(echo $SQL_SERVER_CONTAINER_SERVICE_CODESPACES)
+
+# Write resolved values into .env
+echo "SQL_SERVER_USER=${SQL_SERVER_USER_CODESPACES}" > .env
+echo "SQL_SERVER_PASSWORD=${SQL_SERVER_PASSWORD_CODESPACES}" >> .env
+echo "SQL_SERVER_CONTAINER_SERVICE=${SQL_SERVER_CONTAINER_SERVICE_CODESPACES}" >> .env
+
+# Start Compose
+docker compose up -d
+*******************************
+
+config.py
+*******************************
+import os
+from dotenv import load_dotenv
+
+def get_env(var_name, default=None):
+    value = os.getenv(var_name)
+    return value if value else default
+
+def load_config():
+    env = os.getenv("ENV", "local").lower()
+
+    print("ENV in load_config = " + env)
+
+    # Load .env only for local dev
+    # if env == "local":
+    load_dotenv()
+
+    config = {}
+
+    if env == "codespaces":
+        config["CONTAINER_SERVICE"] = os.getenv("SQL_SERVER_CONTAINER_SERVICE", "sqlserver")
+        config["USER"] = os.getenv("SQL_SERVER_USER")
+        config["PASSWORD"] = os.getenv("SQL_SERVER_PASSWORD")
+
+    elif env == "local":
+        print("Loading local config...")
+
+        config["USER"] = get_env("SQL_SERVER_USER")
+        config["PASSWORD"] = get_env("SQL_SERVER_PASSWORD")
+        config["CONTAINER_SERVICE"] = get_env("SQL_SERVER_CONTAINER_SERVICE")
+
+        print(config)
+    else:
+        raise ValueError(f"Unknown ENV: {env}")
+    
+    return config
+*******************************
+
+
+
+main.py
+*******************************
+from flask import Flask, jsonify
+import pyodbc
+from sqlalchemy import create_engine
+from dotenv import load_dotenv
+import os
+from app.config import load_config
+
+app = Flask(__name__)
+
+print("start main.py")
+
+# load_dotenv()
+
+# Map GitHub Secrets to expected env vars
+# os.environ["SQL_SERVER_USER"] = os.getenv("SQL_SERVER_USER_CODESPACES", "")
+# os.environ["SQL_SERVER_PASSWORD"] = os.getenv("SQL_SERVER_PASSWORD_CODESPACES", "")
+
+
+config = load_config()
+print(config)
+
+SQL_SERVER = config["CONTAINER_SERVICE"]
+SQL_USERNAME = config["USER"]
+SQL_PASSWORD = config["PASSWORD"]
+
+#Debug
+print("👤 SQL_SERVER_USER =", SQL_USERNAME)
+print("🔑 SQL_SERVER_PASSWORD =", SQL_PASSWORD)
+#
+
+# Update these values to match your SQL Server setup
+# SQL_SERVER = "sqlserver"
+# SQL_SERVER = os.getenv("SQL_SERVER_CONTAINER_SERVICE", "sqlserver")
+SQL_DATABASE = "master"
+# SQL_USERNAME = os.getenv("SQL_SERVER_USER")
+# SQL_PASSWORD = os.getenv("SQL_SERVER_PASSWORD")
+DRIVER = "ODBC Driver 18 for SQL Server"
+
+print("🔍 SQL_SERVER_CONTAINER_SERVICE =", repr(SQL_SERVER))
+
+# pyODBC connection string
+odbc_conn_str = (
+    f"DRIVER={{{DRIVER}}};"
+    f"SERVER={SQL_SERVER};"
+    f"DATABASE={SQL_DATABASE};"
+    f"UID={SQL_USERNAME};"
+    f"PWD={SQL_PASSWORD};"
+    f"TrustServerCertificate=yes;"
+)
+
+@app.route("/ping")
+def ping():
+    try:
+        conn = pyodbc.connect(odbc_conn_str, timeout=5)
+        cursor = conn.cursor()
+        cursor.execute("SELECT name FROM sys.databases")
+        databases = [row[0] for row in cursor.fetchall()]
+        conn.close()
+        return jsonify({"status": "ok", "databases": databases})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+@app.route("/home")
+def home():
+    return "Welcome to the SQL Server API!!!??###&&&"
+
+@app.route("/config")
+def config_view(): 
+    return config
+
+@app.route("/db-status")
+def db_status():
+    try:
+        conn = pyodbc.connect(odbc_conn_str, timeout=5)
+        cursor = conn.cursor()
+        cursor.execute("SELECT 1")
+        result = cursor.fetchone()
+        return {"status": "connected", "result": result[0]}
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
+*******************************

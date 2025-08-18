@@ -64,34 +64,8 @@ def ping():
 def home():
     return "Welcome to the SQL Server API!!!??###&&&"
 
-# @app.route("/config")
-# def config_view():
-#     return {
-#         "ENV": os.getenv("ENV"),
-#         "USER": config["USER"],
-#         "PASSWORD": config["PASSWORD"],
-#         "CONTAINER_SERVICE": config["CONTAINER_SERVICE"]
-#     }
-
 @app.route("/config")
-def get_config():
-    import os
-
-    env = os.getenv("ENV")
-
-    config = {}
-
-    if env == "codespaces":
-        config["USER"] = os.getenv("SQL_SERVER_USER_CODESPACES")
-        config["PASSWORD"] = os.getenv("SQL_SERVER_PASSWORD_CODESPACES")
-        config["CONTAINER_SERVICE"] = os.getenv("SQL_SERVER_CONTAINER_SERVICE_CODESPACES", "sqlserver")
-    else:
-        config["USER"] = os.getenv("SQL_SERVER_USER")
-        config["PASSWORD"] = os.getenv("SQL_SERVER_PASSWORD")
-        config["CONTAINER_SERVICE"] = os.getenv("SQL_SERVER_CONTAINER_SERVICE", "sqlserver")
-
-    config["ENV"] = env
-
+def config_view(): 
     return config
 
 @app.route("/db-status")

@@ -1,5 +1,10 @@
 {
   "name": "Lookout Dev Container",
+  "secrets": {
+    "SQL_SERVER_USER_CODESPACES": "SQL_SERVER_USER_CODESPACES",
+    "SQL_SERVER_PASSWORD_CODESPACES": "SQL_SERVER_PASSWORD_CODESPACES",
+    "SQL_SERVER_CONTAINER_SERVICE_CODESPACES": "SQL_SERVER_CONTAINER_SERVICE_CODESPACES"
+  },
   "dockerComposeFile": ["../docker-compose.yml"],
   "service": "flask-app",
   "workspaceFolder": "/workspaces/lookout-app",
@@ -8,10 +13,7 @@
     "ENV": "codespaces",
     "FLASK_APP": "app.main",
     "FLASK_ENV": "development",
-    "PYTHONPATH": "/workspaces/lookout-app",
-    "SQL_SERVER_USER": "${SQL_SERVER_USER}",
-    "SQL_SERVER_PASSWORD": "${SQL_SERVER_PASSWORD}",
-    "SQL_SERVER_CONTAINER_SERVICE": "${SQL_SERVER_CONTAINER_SERVICE}"
+    "PYTHONPATH": "/workspaces/lookout-app"
   },
   "customizations": {
     "vscode": {
@@ -28,11 +30,7 @@
   },
   "forwardPorts": [5000, 1433],
   // "postCreateCommand": "pip install -r requirements.txt",
-  "postCreateCommand": [
-    "chmod +x .devcontainer/setup-env.sh",
-    "bash .devcontainer/setup-env.sh",
-    "pip install -r requirements.txt"
-  ],
+  "postCreateCommand": "chmod +x .devcontainer/setup-env.sh && . .devcontainer/setup-env.sh && pip install -r requirements.txt",
 
   "remoteUser": "vscode"
 }
