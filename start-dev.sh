@@ -15,4 +15,10 @@ if [ -z "$SQL_SERVER_PASSWORD" ]; then
 fi
 
 # Start SQL Server container
-docker compose up -d sqlserver
+# docker compose up -d sqlserver
+
+echo "Waiting for SQL Server to be ready..."
+until nc -z sqlserver 1433; do
+  sleep 1
+done
+echo "SQL Server is up!"
