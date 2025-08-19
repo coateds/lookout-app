@@ -34,7 +34,8 @@
   // "postCreateCommand": ". .devcontainer/setup-env.sh && pip install -r requirements.txt",
   // "postCreateCommand": "ls -l .devcontainer/setup-env.sh && file .devcontainer/setup-env.sh && chmod +x .devcontainer/setup-env.sh && . .devcontainer/setup-env.sh",
   // "postCreateCommand": "bash -c 'ls -l .devcontainer/setup-env.sh && file .devcontainer/setup-env.sh && chmod +x .devcontainer/setup-env.sh && . .devcontainer/setup-env.sh' > /workspaces/lookout-app/.postcreate.log 2>&1",
-  "postCreateCommand": "chmod +x .devcontainer/setup-env.sh && . .devcontainer/setup-env.sh > /workspaces/lookout-app/.postcreate.log 2>&1 && pip install -r requirements.txt",
-  
+  // "postCreateCommand": "chmod +x .devcontainer/setup-env.sh && . .devcontainer/setup-env.sh > /workspaces/lookout-app/.postcreate.log 2>&1 && pip install -r requirements.txt",
+  "postCreateCommand": "chmod +x .devcontainer/setup-env.sh && . .devcontainer/setup-env.sh && touch /workspaces/lookout-app/.env.ready",
+
   "remoteUser": "vscode"
 }

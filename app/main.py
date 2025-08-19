@@ -3,7 +3,14 @@ import pyodbc
 from sqlalchemy import create_engine
 from dotenv import load_dotenv
 import os
+import time
 from app.config import load_config
+
+# Wait for .env to be ready
+while not os.path.exists("/workspaces/lookout-app/.env.ready"):
+    print("Waiting for .env to be ready...")
+    time.sleep(1)
+
 
 app = Flask(__name__)
 
