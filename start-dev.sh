@@ -1,4 +1,9 @@
 #!/bin/bash
+
+# This script is not used at this time
+# it's purpose wast to create a delay for entering the sql sa password
+# and to wait for the .env.ready file to be created
+
 set -e
 
 # Wait for .env.ready

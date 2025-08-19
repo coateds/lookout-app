@@ -5,13 +5,9 @@ services:
       context: .
       dockerfile: .devcontainer/Dockerfile
 
-    # env_file:
-    #   - .env
-
     volumes:
       - .:/workspaces/lookout-app
       - .:/app
-      # - ./.env:/app/.env  # 👈 Mount .env file
 
     ports:
       - "5000:5000"
@@ -20,7 +16,6 @@ services:
       - sqlserver
 
     command: flask run --host=0.0.0.0 --port=5000
-
 
     environment:
       FLASK_ENV: development

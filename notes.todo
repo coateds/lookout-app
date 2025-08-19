@@ -12,3 +12,5 @@ Create a GitHub Action that:
 • 	✅ Installs dependencies and sets up the Flask app
 • 	✅ Optionally runs tests or a health check
 • 	✅ Prepares the environment for coding or previewing in Codespaces
+
+☐ @high remove sa password from sql container in docker-compose.yml
