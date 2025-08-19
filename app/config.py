@@ -1,5 +1,5 @@
 import os
-from dotenv import load_dotenv
+from dotenv import load_dotenv, find_dotenv
 
 def get_env(var_name, default=None):
     value = os.getenv(var_name)
@@ -10,9 +10,9 @@ def load_config():
 
     print("ENV in load_config = " + env)
 
-    # Load .env only for local dev
-    # if env == "local":
-    load_dotenv()
+    # Load .env if present
+    load_dotenv(find_dotenv())
+
 
     config = {}
 
