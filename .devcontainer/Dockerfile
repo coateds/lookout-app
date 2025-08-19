@@ -8,7 +8,8 @@ RUN apt-get update && apt-get install -y \
     curl \
     gnupg \
     apt-transport-https \
-    unixodbc-dev
+    unixodbc-dev \
+    netcat
 
 # Add Microsoft’s GPG key and repo using keyring
 RUN curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor -o /usr/share/keyrings/microsoft-prod.gpg && \
