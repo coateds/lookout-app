@@ -17,7 +17,7 @@ def load_config():
     config = {}
 
     if env == "codespaces":
-        config["CONTAINER_SERVICE"] = os.getenv("SQL_SERVER_CONTAINER_SERVICE", "sqlserver")
+        config["CONTAINER_SERVICE"] = os.getenv("SQL_SERVER_CONTAINER_SERVICE")
         config["USER"] = os.getenv("SQL_SERVER_USER")
         config["PASSWORD"] = os.getenv("SQL_SERVER_PASSWORD")
 
