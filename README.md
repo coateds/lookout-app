@@ -2,6 +2,38 @@
 
 CoPilot thread:  GitHub actions deploy lookout app
 
+## New notes with the databases running, connected and populated with Flask-Migrate
+
+ps aux | grep flask
+
+so my workflow every time I update any models is to makes changes to def create_app():
+- from .models import [every table] 
+run flask db migrate -m "[comment]" 
+make adjustments to the python file created in versions (like comment out system tables that should not be dropped) 
+finally run flask db upgrade
+
+
+I stopped and rebuilt the containers  
+docker compose down 
+then docker compose up --build 
+connect to sql now, there is no lookout table
+python app.py
+the database exists
+flask db migrate -m "Initial table creation"
+	there are versions already there (sometimes they should be deleted?)
+flask db upgrade
+The table exists
+http://localhost:5000/, http://localhost:5000/env, http://localhost:5000/db-check, 
+
+
+it runs without error in codespaces, but brings up the wrong/old website and I cannot connect to the database
+ps aux | grep flask, kill the top one
+python app.py (or change the environment variable)
+
+
+
+
+
 ## Dev environment - Local
 - Two Linux containers
   - Custom Flask app container with code and connection to ...
