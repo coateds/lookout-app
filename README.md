@@ -2,9 +2,33 @@
 
 CoPilot thread:  GitHub actions deploy lookout app
 
-## New notes with the databases running, connected and populated with Flask-Migrate
+## Checkpoint: flask configured to start new configuration, lookout db is built, flask migrate creates one table
+- This works in both local and codespaces environment
 
-ps aux | grep flask
+## Need to make my last direct check in to Master
+  - todo: tag it
+
+## Lifecycle of the environments
+
+### Local Dev
+- Do major dev work here
+- Start Procedure
+  - From the lookout-app workspace: `docker compose up --build`
+  - From the lookout-app workspace: vscode ctrl+shft+p > Dev Containers: Attach to running...  > lookout-app-flask-app-1
+  - From the opened container in VSCode (purple): `flask run --host=0.0.0.0 --port=5000`
+    - This will build the "lookout" database
+  - From local browser, validate
+    - http://localhost:5000/ > Simple Message:  Welcome to the website!
+    - http://localhost:5000/env
+    - http://localhost:5000/db-check
+  - Note that the lookout database will be empty
+  - From the opened container in VSCode (purple) sync db objects to models
+    - run `flask db migrate -m "[comment]"`
+    - make adjustments to the python file created in versions (like comment out system tables that should not be dropped)
+    - finally run flask db upgrade
+  - Changes to models.py > migrate to database
+
+
 
 so my workflow every time I update any models is to makes changes to def create_app():
 - from .models import [every table] 
@@ -12,6 +36,8 @@ run flask db migrate -m "[comment]"
 make adjustments to the python file created in versions (like comment out system tables that should not be dropped) 
 finally run flask db upgrade
 
+in codespaces: Error: No such command 'db'. means I still have to run export FLASK_APP=website:create_app for that shell
+ps aux | grep flask
 
 I stopped and rebuilt the containers  
 docker compose down 
@@ -55,7 +81,7 @@ python app.py (or change the environment variable)
   - if the containers show as exited and they need to be rebuilt, use docker compose down first.
 
 ## Dev Environment - codespaces
-export FLASK_APP=app/main.py
+export FLASK_APP=app/main.py  No!!  S/B export FLASK_APP=website:create_app
 flask run --host=0.0.0.0 --port=5000
 
 This should produce an output in the terminal indicating that Flask is running

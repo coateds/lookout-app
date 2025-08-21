@@ -33,7 +33,7 @@ def create_app():
     db.init_app(app)
     migrate.init_app(app, db)
 
-    from .models import User
+    from .models import User, Event
 
     from .views import views
     app.register_blueprint(views)
