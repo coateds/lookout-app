@@ -2,3 +2,5 @@ flask
 pyodbc
 sqlalchemy
 python-dotenv
+flask_sqlalchemy
+flask_migrate

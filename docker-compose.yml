@@ -15,11 +15,12 @@ services:
     depends_on:
       - sqlserver
 
-    command: flask run --host=0.0.0.0 --port=5000
+    # command: flask run --host=0.0.0.0 --port=5000
+    command: tail -f /dev/null
 
     environment:
       FLASK_ENV: development
-      FLASK_APP: app.main
+      FLASK_APP: website:create_app
       FLASK_DEBUG: 1
 
     working_dir: /app

@@ -51,3 +51,7 @@ build/
 *.bak
 *.swp
 *.tmp
+
+# 📦 Alembic-generated cache or logs
+migrations/__pycache__/
+*.pyc
