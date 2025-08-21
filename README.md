@@ -25,39 +25,31 @@ CoPilot thread:  GitHub actions deploy lookout app
   - From the opened container in VSCode (purple) sync db objects to models
     - run `flask db migrate -m "[comment]"`
     - make adjustments to the python file created in versions (like comment out system tables that should not be dropped)
-    - finally run flask db upgrade
+    - finally run `flask db upgrade`
   - Changes to models.py > migrate to database
+    - put new talbe(s) in models.py
+    - in __init__.py edit from .models import User to include new tables e.g. `from .models import User, Event`
+    - run `flask db migrate -m "[comment]"`
+    - make adjustments to the python file created in versions (like comment out system tables that should not be dropped)
+    - finally run `flask db upgrade`
+    - I assume these changes will automatically be there the next time I build? (yes, but still need to `flask db migrate/upgrade`)
+- Shutdown procedure
+  - From the lookout-app workspace: ctrl + c, [enter], wait for everything to stop
+  - `docker compose down`
 
-
-
-so my workflow every time I update any models is to makes changes to def create_app():
-- from .models import [every table] 
-run flask db migrate -m "[comment]" 
-make adjustments to the python file created in versions (like comment out system tables that should not be dropped) 
-finally run flask db upgrade
+### Codespaces Dev
+- codespaces are built from any branch
+- Make sure all changes to that branch are commited and pushed to the branch
+- In the GitHub webpage, on the desired branch, click the grean CODE button, then click Create codespace on [branch]
+  - Wait for five min
+- Codespaces opens in a Web VSCode interface
+- In the terminal run `flask run --host=0.0.0.0 --port=5000`
+- Go to the ports tab of the bottom pane
+- click the open in browser icon next to the forwarded port to 5000??
+- The database will need to be sync'd to modesl using the same process as for local dev
 
 in codespaces: Error: No such command 'db'. means I still have to run export FLASK_APP=website:create_app for that shell
 ps aux | grep flask
-
-I stopped and rebuilt the containers  
-docker compose down 
-then docker compose up --build 
-connect to sql now, there is no lookout table
-python app.py
-the database exists
-flask db migrate -m "Initial table creation"
-	there are versions already there (sometimes they should be deleted?)
-flask db upgrade
-The table exists
-http://localhost:5000/, http://localhost:5000/env, http://localhost:5000/db-check, 
-
-
-it runs without error in codespaces, but brings up the wrong/old website and I cannot connect to the database
-ps aux | grep flask, kill the top one
-python app.py (or change the environment variable)
-
-
-
 
 
 ## Dev environment - Local
