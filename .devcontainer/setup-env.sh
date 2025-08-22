@@ -19,17 +19,20 @@ echo "  - CODESPACES: $IS_CODESPACES"
 echo "  - CI:         $IS_CI"
 echo "  - DEVCONTAINER: $IS_DEVCONTAINER"
 
+
+# Detect CI inside devcontainer (GitHub Actions + devcontainer)
+IS_GITHUB_RUNNER=${GITHUB_ACTIONS:-false}
+
 # Map secrets based on environment
-if [[ "$IS_CODESPACES" == "true" || "$IS_DEVCONTAINER" == "true" ]]; then
-  SQL_SERVER_USER=${SQL_SERVER_USER_CODESPACES:-${SQL_SERVER_USER_CI:-""}}
-  SQL_SERVER_PASSWORD=${SQL_SERVER_PASSWORD_CODESPACES:-${SQL_SERVER_PASSWORD_CI:-""}}
-  SQL_SERVER_CONTAINER_SERVICE=${SQL_SERVER_CONTAINER_SERVICE_CODESPACES:-${SQL_SERVER_CONTAINER_SERVICE_CI:-""}}
-elif [[ "$IS_CI" == "true" ]]; then
+if [[ "$IS_CODESPACES" == "true" ]]; then
+  SQL_SERVER_USER=${SQL_SERVER_USER_CODESPACES:-""}
+  SQL_SERVER_PASSWORD=${SQL_SERVER_PASSWORD_CODESPACES:-""}
+  SQL_SERVER_CONTAINER_SERVICE=${SQL_SERVER_CONTAINER_SERVICE_CODESPACES:-""}
+elif [[ "$IS_CI" == "true" || "$IS_GITHUB_RUNNER" == "true" || "$IS_DEVCONTAINER" == "true" ]]; then
   SQL_SERVER_USER=${SQL_SERVER_USER_CI:-""}
   SQL_SERVER_PASSWORD=${SQL_SERVER_PASSWORD_CI:-""}
   SQL_SERVER_CONTAINER_SERVICE=${SQL_SERVER_CONTAINER_SERVICE_CI:-""}
 else
-  # Local fallback (e.g., from .secrets file)
   if [[ -f .secrets ]]; then
     source .secrets
   fi
@@ -37,6 +40,8 @@ else
   SQL_SERVER_PASSWORD=${SQL_SERVER_PASSWORD:-""}
   SQL_SERVER_CONTAINER_SERVICE=${SQL_SERVER_CONTAINER_SERVICE:-"localhost"}
 fi
+
+
 
 # Fail fast if required secrets are missing
 : "${SQL_SERVER_USER:?❌ SQL_SERVER_USER is not set}"
