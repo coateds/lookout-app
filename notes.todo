@@ -14,3 +14,4 @@ Create a GitHub Action that:
 • 	✅ Prepares the environment for coding or previewing in Codespaces
 
 ☐ @high remove sa password from sql container in docker-compose.yml
+- Not easily done
