@@ -1,0 +1,28 @@
+name: Dev Container CI
+
+on:
+  push:
+    branches: [master, dev]
+  pull_request:
+
+jobs:
+  devcontainer-build:
+    runs-on: ubuntu-latest
+    env:
+      CI: true
+      SQL_SERVER_USER_CODESPACES: ${{ secrets.SQL_SERVER_USER_CODESPACES }}
+      SQL_SERVER_PASSWORD_CODESPACES: ${{ secrets.SQL_SERVER_PASSWORD_CODESPACES }}
+      SQL_SERVER_CONTAINER_SERVICE_CODESPACES: ${{ secrets.SQL_SERVER_CONTAINER_SERVICE_CODESPACES }}
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Build and run inside devcontainer
+        uses: devcontainers/ci@v0.3
+        with:
+          runCmd: |
+            echo "✅ Running inside devcontainer"
+            chmod +x .devcontainer/setup-env.sh
+            . .devcontainer/setup-env.sh
+            flask db upgrade
+            pytest

@@ -4,8 +4,8 @@ set -e
 echo "🔧 Generating .env from Codespaces secrets..."
 
 # Only run in Codespaces
-if [ "$CODESPACES" = "true" ]; then
-  echo "Detected Codespaces environment."
+if [ "$CODESPACES" = "true" ] || [ "$CI" = "true" ]; then
+  echo "Detected Codespaces or CI environment."
 
   # Write resolved values into .env
   cat <<EOF > .env
@@ -18,7 +18,7 @@ EOF
 
   echo "✅ .env file created."
 else
-  echo "⚠️ Not in Codespaces. Skipping .env generation."
+  echo "⚠️ Not in Codespaces or CI. Skipping .env generation."
 fi
 
 # Start Compose
