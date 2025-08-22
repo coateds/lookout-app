@@ -3,6 +3,8 @@ set -euo pipefail
 
 echo "🔧 Starting setup-env.sh..."
 
+trap 'echo "❌ setup-env.sh failed at line $LINENO"; exit 1' ERR
+
 # Detect environment
 IS_CODESPACES=${CODESPACES:-false}
 IS_CI=${CI:-false}
@@ -40,6 +42,11 @@ fi
 : "${SQL_SERVER_USER:?❌ SQL_SERVER_USER is not set}"
 : "${SQL_SERVER_PASSWORD:?❌ SQL_SERVER_PASSWORD is not set}"
 : "${SQL_SERVER_CONTAINER_SERVICE:?❌ SQL_SERVER_CONTAINER_SERVICE is not set}"
+
+if [[ -z "${SQL_SERVER_USER:-}" || -z "${SQL_SERVER_PASSWORD:-}" || -z "${SQL_SERVER_CONTAINER_SERVICE:-}" ]]; then
+  echo "⚠️ Required secrets missing. Skipping .env generation."
+  exit 0
+fi
 
 # Construct SQLAlchemy URI
 SQLALCHEMY_DATABASE_URI="mssql+pyodbc://${SQL_SERVER_USER}:${SQL_SERVER_PASSWORD}@${SQL_SERVER_CONTAINER_SERVICE}:1433/lookout?driver=ODBC+Driver+18+for+SQL+Server"
