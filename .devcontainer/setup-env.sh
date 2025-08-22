@@ -1,25 +1,54 @@
-#!/bin/bash
-set -e
+#!/usr/bin/env bash
+set -euo pipefail
 
-echo "🔧 Generating .env from Codespaces secrets..."
+echo "🔧 Starting setup-env.sh..."
 
-# Only run in Codespaces
-if [ "$CODESPACES" = "true" ] || [ "$CI" = "true" ]; then
-  echo "Detected Codespaces or CI environment."
+# Detect environment
+IS_CODESPACES=${CODESPACES:-false}
+IS_CI=${CI:-false}
+IS_DEVCONTAINER=false
 
-  # Write resolved values into .env
-  cat <<EOF > .env
-# Environment
-ENV=codespaces
-SQL_SERVER_USER=${SQL_SERVER_USER_CODESPACES}
-SQL_SERVER_PASSWORD=${SQL_SERVER_PASSWORD_CODESPACES}
-SQL_SERVER_CONTAINER_SERVICE=${SQL_SERVER_CONTAINER_SERVICE_CODESPACES}
-EOF
-
-  echo "✅ .env file created."
-else
-  echo "⚠️ Not in Codespaces or CI. Skipping .env generation."
+if grep -q "devcontainer" /proc/1/cgroup || [[ "$PWD" == "/workspaces/"* ]]; then
+  IS_DEVCONTAINER=true
 fi
 
-# Start Compose
-# docker compose up -d
+echo "🌐 Environment detection:"
+echo "  - CODESPACES: $IS_CODESPACES"
+echo "  - CI:         $IS_CI"
+echo "  - DEVCONTAINER: $IS_DEVCONTAINER"
+
+# Map secrets based on environment
+if [[ "$IS_CODESPACES" == "true" || "$IS_DEVCONTAINER" == "true" ]]; then
+  SQL_SERVER_USER=${SQL_SERVER_USER_CODESPACES:-""}
+  SQL_SERVER_PASSWORD=${SQL_SERVER_PASSWORD_CODESPACES:-""}
+  SQL_SERVER_CONTAINER_SERVICE=${SQL_SERVER_CONTAINER_SERVICE_CODESPACES:-""}
+elif [[ "$IS_CI" == "true" ]]; then
+  SQL_SERVER_USER=${SQL_SERVER_USER_CI:-""}
+  SQL_SERVER_PASSWORD=${SQL_SERVER_PASSWORD_CI:-""}
+  SQL_SERVER_CONTAINER_SERVICE=${SQL_SERVER_CONTAINER_SERVICE_CI:-""}
+else
+  # Local fallback (e.g., from .secrets file)
+  if [[ -f .secrets ]]; then
+    source .secrets
+  fi
+  SQL_SERVER_USER=${SQL_SERVER_USER:-""}
+  SQL_SERVER_PASSWORD=${SQL_SERVER_PASSWORD:-""}
+  SQL_SERVER_CONTAINER_SERVICE=${SQL_SERVER_CONTAINER_SERVICE:-"localhost"}
+fi
+
+# Fail fast if required secrets are missing
+: "${SQL_SERVER_USER:?❌ SQL_SERVER_USER is not set}"
+: "${SQL_SERVER_PASSWORD:?❌ SQL_SERVER_PASSWORD is not set}"
+: "${SQL_SERVER_CONTAINER_SERVICE:?❌ SQL_SERVER_CONTAINER_SERVICE is not set}"
+
+# Construct SQLAlchemy URI
+SQLALCHEMY_DATABASE_URI="mssql+pyodbc://${SQL_SERVER_USER}:${SQL_SERVER_PASSWORD}@${SQL_SERVER_CONTAINER_SERVICE}:1433/lookout?driver=ODBC+Driver+18+for+SQL+Server"
+
+# Write to .env
+cat <<EOF > .env
+SQLALCHEMY_DATABASE_URI=${SQLALCHEMY_DATABASE_URI}
+FLASK_ENV=development
+EOF
+
+echo "✅ .env generated:"
+cat .env
