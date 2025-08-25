@@ -10,6 +10,9 @@
   "workspaceFolder": "/workspaces/lookout-app",
   "features": {},
   "containerEnv": {
+    "SQL_SERVER_USER_CODESPACES": "${localEnv:SQL_SERVER_USER_CODESPACES}",
+    "SQL_SERVER_PASSWORD_CODESPACES": "${localEnv:SQL_SERVER_PASSWORD_CODESPACES}",
+    "SQL_SERVER_CONTAINER_SERVICE_CODESPACES": "${localEnv:SQL_SERVER_CONTAINER_SERVICE_CODESPACES}",
     "ENV": "codespaces",
     "FLASK_APP": "website:create_app",
     "FLASK_ENV": "development",
