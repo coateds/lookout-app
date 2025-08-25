@@ -10,6 +10,7 @@
   "workspaceFolder": "/workspaces/lookout-app",
   "features": {},
   "containerEnv": {
+    "CI": "${localEnv:CI}",
     "SQL_SERVER_USER_CODESPACES": "${localEnv:SQL_SERVER_USER_CODESPACES}",
     "SQL_SERVER_PASSWORD_CODESPACES": "${localEnv:SQL_SERVER_PASSWORD_CODESPACES}",
     "SQL_SERVER_CONTAINER_SERVICE_CODESPACES": "${localEnv:SQL_SERVER_CONTAINER_SERVICE_CODESPACES}",
