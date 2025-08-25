@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/devcontainers/python:3.11
+FROM mcr.microsoft.com/devcontainers/python:3.11 AS dev_containers_target_stage
 
 RUN mkdir -p /workspaces/lookout-app
 WORKDIR /workspaces/lookout-app
