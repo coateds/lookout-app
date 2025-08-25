@@ -1,4 +1,9 @@
-FROM mcr.microsoft.com/devcontainers/python:3.11 AS dev_containers_target_stage
+# Base stage for devcontainers CLI
+FROM mcr.microsoft.com/devcontainers/python:3.11 AS dev_containers_base
+
+# Final stage expected by devcontainers CLI
+FROM dev_containers_base AS dev_containers_target_stage
+
 
 RUN mkdir -p /workspaces/lookout-app
 WORKDIR /workspaces/lookout-app
