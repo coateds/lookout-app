@@ -1,0 +1,15 @@
+{
+  "name": "Lookout CI Container",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "workspaceFolder": "/workspaces/lookout-app",
+  "containerEnv": {
+    "CI": "true",
+    "ENV": "ci",
+    "FLASK_APP": "website:create_app",
+    "FLASK_ENV": "development",
+    "PYTHONPATH": "/workspaces/lookout-app"
+  },
+  "remoteUser": "vscode"
+}

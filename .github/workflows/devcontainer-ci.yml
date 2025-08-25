@@ -37,6 +37,7 @@ jobs:
       - name: Build and run inside devcontainer
         uses: devcontainers/ci@v0.3
         with:
+          devcontainerPath: .devcontainer/devcontainer.ci.json
           runCmd: |
             echo "✅ Running inside devcontainer"
             echo "SQL_SERVER_USER_CODESPACES: ${SQL_SERVER_USER_CODESPACES:+[set]}"
