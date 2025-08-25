@@ -44,7 +44,7 @@ jobs:
         uses: devcontainers/ci@v0.3
         with:
           configFile: .devcontainer/devcontainer.json
-          imageName: lookout-app-ci
+          imageName: ghcr.io/coateds/lookout-app-ci
           noCache: true
           env: |
             SQL_SERVER_USER_CODESPACES=${{ secrets.SQL_SERVER_USER_CODESPACES }}
