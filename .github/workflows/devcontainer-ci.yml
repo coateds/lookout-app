@@ -17,6 +17,15 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
+      - name: Start SQL Server container
+        run: |
+          docker run -d \
+            --name sqlserver \
+            -e SA_PASSWORD='YourStrong!Passw0rd' \
+            -e ACCEPT_EULA=Y \
+            -p 1433:1433 \
+            mcr.microsoft.com/mssql/server:2022-latest
+            
       - name: Build and run inside devcontainer
         uses: devcontainers/ci@v0.3
         with:
