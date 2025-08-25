@@ -42,6 +42,7 @@ jobs:
         with:
           configFile: .devcontainer/devcontainer.json
           imageName: lookout-app-ci
+          noCache: true
           runCmd: |
             echo "✅ Running inside devcontainer"
             echo "SQL_SERVER_USER_CODESPACES: ${SQL_SERVER_USER_CODESPACES:+[set]}"
