@@ -22,13 +22,13 @@ jobs:
         run: docker build -f .devcontainer/Dockerfile.ci -t lookout-app-ci .
 
       - name: Tag image for GHCR
-        run: docker tag lookout-app-ci ghcr.io/coateds/lookout-app-ci:latest
+        run: docker tag lookout-app-ci ghcr.io/${{ github.repository_owner }}/lookout-app-ci:latest
 
       - name: Log in to GHCR
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u coateds --password-stdin
 
       - name: Push image to GHCR
-        run: docker push ghcr.io/coateds/lookout-app-ci:latest
+        run: docker push ghcr.io/${{ github.repository_owner }}/lookout-app-ci:latest
 
       - name: Start SQL Server container
         run: |
@@ -54,7 +54,7 @@ jobs:
         uses: devcontainers/ci@v0.3
         with:
           configFile: .devcontainer/devcontainer.json
-          imageName: ghcr.io/coateds/lookout-app-ci:latest"
+          imageName: ghcr.io/${{ github.repository_owner }}/lookout-app-ci:latest
           noCache: true
           env: |
             SQL_SERVER_USER_CODESPACES=${{ secrets.SQL_SERVER_USER_CODESPACES }}
