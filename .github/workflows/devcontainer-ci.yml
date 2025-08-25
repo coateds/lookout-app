@@ -25,10 +25,10 @@ jobs:
         run: docker tag lookout-app-ci ghcr.io/coateds/lookout-app-ci:latest
 
       - name: Log in to GHCR
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u coateds --password-stdin
 
       - name: Push image to GHCR
-        run: docker push ghcr.io/${{ github.actor }}/lookout-app-ci:latest
+        run: docker push ghcr.io/coateds/lookout-app-ci:latest
 
       - name: Start SQL Server container
         run: |
