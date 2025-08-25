@@ -19,7 +19,7 @@ jobs:
 
       - name: Build image
         # run: docker build -t lookout-app-ci .devcontainer/
-        docker build -f .devcontainer/Dockerfile.ci -t lookout-app-ci .
+        run: docker build -f .devcontainer/Dockerfile.ci -t lookout-app-ci .
 
       - name: Tag image for GHCR
         run: docker tag lookout-app-ci ghcr.io/${{ github.actor }}/lookout-app-ci:latest
