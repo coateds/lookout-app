@@ -34,10 +34,13 @@ jobs:
             sleep 5
           done
 
+      - name: Patch CI config filename
+        run: mv .devcontainer/devcontainer.ci.json .devcontainer/devcontainer.json
+
       - name: Build and run inside devcontainer
         uses: devcontainers/ci@v0.3
         with:
-          configFile: .devcontainer/devcontainer.ci.json
+          configFile: .devcontainer/devcontainer.json
           imageName: lookout-app-ci
           runCmd: |
             echo "✅ Running inside devcontainer"
