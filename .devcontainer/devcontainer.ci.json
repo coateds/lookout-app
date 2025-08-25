@@ -1,7 +1,8 @@
 {
   "name": "Lookout CI Container",
   "build": {
-    "dockerfile": "Dockerfile"
+    "dockerfile": "Dockerfile",
+    "context": "."
   },
   "workspaceFolder": "/workspaces/lookout-app",
   "containerEnv": {
