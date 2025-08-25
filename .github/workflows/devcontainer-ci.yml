@@ -22,7 +22,10 @@ jobs:
         with:
           runCmd: |
             echo "✅ Running inside devcontainer"
+            echo "SQL_SERVER_USER_CODESPACES: ${SQL_SERVER_USER_CODESPACES:+[set]}"
+            echo "SQL_SERVER_PASSWORD_CODESPACES: ${SQL_SERVER_PASSWORD_CODESPACES:+[set]}"
+            echo "SQL_SERVER_CONTAINER_SERVICE_CODESPACES: ${SQL_SERVER_CONTAINER_SERVICE_CODESPACES:+[set]}"
             chmod +x .devcontainer/setup-env.sh
-            . .devcontainer/setup-env.sh
+            bash .devcontainer/setup-env.sh
             flask db upgrade
             pytest
