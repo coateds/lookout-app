@@ -22,7 +22,7 @@ jobs:
         run: docker build -f .devcontainer/Dockerfile.ci -t lookout-app-ci .
 
       - name: Tag image for GHCR
-        run: docker tag lookout-app-ci ghcr.io/${{ github.actor }}/lookout-app-ci:latest
+        run: docker tag lookout-app-ci ghcr.io/coateds/lookout-app-ci:latest
 
       - name: Log in to GHCR
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
