@@ -68,5 +68,5 @@ jobs:
             echo "SQL_SERVER_CONTAINER_SERVICE_CODESPACES: ${SQL_SERVER_CONTAINER_SERVICE_CODESPACES:+[set]}"
             chmod +x .devcontainer/setup-env.sh
             bash .devcontainer/setup-env.sh
-            # flask db upgrade
+            flask db upgrade
             pytest
