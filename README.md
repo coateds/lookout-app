@@ -49,7 +49,7 @@ CoPilot thread:  GitHub actions deploy lookout app
 - The database will need to be sync'd to modesl using the same process as for local dev
 
 in codespaces: Error: No such command 'db'. means I still have to run export FLASK_APP=website:create_app for that shell
-ps aux | grep flask
+`ps aux | grep flask`
 
 ### CI Dev
 - GitHub Action Workflow that builds the dev environment in GitHub "cloud", then tears it down
@@ -58,6 +58,10 @@ ps aux | grep flask
 - capable of running pytest
   - in lookout-app\tests\test_smoke.py
 
+## Validation with pytest
+
+## Dev environment - Local
+- vscode ➜ /workspaces/lookout-app $ pytest
 
 ## Dev environment - Local
 - Two Linux containers
