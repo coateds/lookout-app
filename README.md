@@ -51,6 +51,13 @@ CoPilot thread:  GitHub actions deploy lookout app
 in codespaces: Error: No such command 'db'. means I still have to run export FLASK_APP=website:create_app for that shell
 ps aux | grep flask
 
+### CI Dev
+- GitHub Action Workflow that builds the dev environment in GitHub "cloud", then tears it down
+- triggered by push to dev and master
+- View result on GitHub webpage actions tab
+- capable of running pytest
+  - in lookout-app\tests\test_smoke.py
+
 
 ## Dev environment - Local
 - Two Linux containers
