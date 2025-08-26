@@ -15,13 +15,13 @@ services:
     depends_on:
       - sqlserver
 
-    command: >
-      bash -c "flask db migrate -m \"Initial migration\" &&
-               flask db upgrade &&
-               flask run --host=0.0.0.0 --port=5000"
+    # command: >
+    #   bash -c "flask db migrate -m \"Initial migration\" &&
+    #            flask db upgrade &&
+    #            flask run --host=0.0.0.0 --port=5000"
 
 
-    # command: tail -f /dev/null
+    command: tail -f /dev/null
 
     environment:
       FLASK_ENV: development
