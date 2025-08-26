@@ -18,8 +18,8 @@ def load_env_config():
         config["USER"] = os.getenv("SQL_SERVER_USER")
         config["PASSWORD"] = os.getenv("SQL_SERVER_PASSWORD")
 
-    elif env == "local":
-    # elif env in ["local", "ci"]:
+    # elif env == "local":
+    elif env in ["local", "ci"]:
         config["USER"] = get_env("SQL_SERVER_USER")
         config["PASSWORD"] = get_env("SQL_SERVER_PASSWORD")
         config["CONTAINER_SERVICE"] = get_env("SQL_SERVER_CONTAINER_SERVICE")
