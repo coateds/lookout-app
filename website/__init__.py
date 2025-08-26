@@ -21,10 +21,14 @@ def ensure_database_exists(uri, db_name):
 
 config = load_env_config()
 
-def create_app():
+def create_app(config_override=None):
     app = Flask(__name__)
 
     config = load_env_config()
+
+    if config_override:
+        config.update(config_override)
+
     app.config.update(config)
 
     # Build the "lookout" database if it doesn't exist
