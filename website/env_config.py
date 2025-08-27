@@ -7,13 +7,15 @@ def get_env(var_name, default=None):
 
 def load_env_config():
     env = os.getenv("ENV", "local").lower()
+    print(f"🔧 Loading config for ENV: {env}")
 
     # Load .env if present
     load_dotenv(find_dotenv())
 
     config = {}
 
-    if env == "codespaces":
+    if env in ["codespaces", "ci"]:
+    # if env == "codespaces":
         config["CONTAINER_SERVICE"] = os.getenv("SQL_SERVER_CONTAINER_SERVICE")
         config["USER"] = os.getenv("SQL_SERVER_USER")
         config["PASSWORD"] = os.getenv("SQL_SERVER_PASSWORD")
