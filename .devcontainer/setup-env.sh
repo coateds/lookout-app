@@ -98,6 +98,9 @@ else
   echo "⚠️ SQLALCHEMY_DATABASE_URI is not set"
 fi
 
+echo "🔍 Full SQLAlchemy URI: $SQLALCHEMY_DATABASE_URI"
+
+
 cat <<EOF > .env
 SQLALCHEMY_DATABASE_URI=${SQLALCHEMY_DATABASE_URI}
 FLASK_ENV=development
