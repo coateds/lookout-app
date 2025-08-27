@@ -79,6 +79,10 @@ if [[ -f .env && "${FORCE_REGEN:-false}" != "true" ]]; then
   exit 0
 fi
 
+print(f"🔍 SQL_SERVER_USER: {os.getenv('SQL_SERVER_USER')}")
+print(f"🔍 SQL_SERVER_PASSWORD: {os.getenv('SQL_SERVER_PASSWORD')}")
+print(f"🔍 SQL_SERVER_CONTAINER_SERVICE: {os.getenv('SQL_SERVER_CONTAINER_SERVICE')}")
+
 # ─────────────────────────────────────────────────────────────
 # 🧪 Construct SQLAlchemy URI and Write .env
 # ─────────────────────────────────────────────────────────────
