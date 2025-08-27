@@ -2,9 +2,13 @@
 # use push (master and dev) and pull request events to trigger the workflow
 # build the flask app devcontainer, read the secrets and output them to the log for validation
 # do not just copy the other workflow as I am trying to understand how this works
+
+# inject connection string into flask container with the format: SQLALCHEMY_DATABASE_URI="mssql+pyodbc://${SQL_SERVER_USER}:${SQL_SERVER_PASSWORD}@${SQL_SERVER_CONTAINER_SERVICE}:1433/lookout?driver=ODBC+Driver+18+for+SQL+Server"
+# run flask with the connection string and run tests
+
 on:
-  push:
-    branches: [master, dev]
+  # push:
+  #   branches: [master, dev]
   pull_request:
 
 jobs:
@@ -52,3 +56,4 @@ jobs:
 
       - name: Patch CI config filename
         run: mv .devcontainer/devcontainer.ci.json .devcontainer/devcontainer.json
+

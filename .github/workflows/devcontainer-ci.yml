@@ -1,8 +1,8 @@
 name: Dev Container CI
 
 on:
-  # push:
-  #   branches: [master, dev]
+  push:
+    branches: [master, dev]
   pull_request:
 
 jobs:
@@ -82,4 +82,4 @@ jobs:
               sleep 2
             done
 
-            pytest
+            # pytest
