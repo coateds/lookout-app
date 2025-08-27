@@ -1,0 +1,54 @@
+# define GitHub Workflow for building temporary containers in order to run tests
+# use push (master and dev) and pull request events to trigger the workflow
+# build the flask app devcontainer, read the secrets and output them to the log for validation
+# do not just copy the other workflow as I am trying to understand how this works
+on:
+  push:
+    branches: [master, dev]
+  pull_request:
+
+jobs:
+  devcontainer-build:
+    runs-on: ubuntu-latest
+    env:
+      CI: true
+      ENV: ci
+      SQL_SERVER_USER_CODESPACES: ${{ secrets.SQL_SERVER_USER_CODESPACES }}
+      SQL_SERVER_PASSWORD_CODESPACES: ${{ secrets.SQL_SERVER_PASSWORD_CODESPACES }}
+      SQL_SERVER_CONTAINER_SERVICE_CODESPACES: ${{ secrets.SQL_SERVER_CONTAINER_SERVICE_CODESPACES }}
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Build image
+        # run: docker build -t lookout-app-ci .devcontainer/
+        run: docker build -f .devcontainer/Dockerfile.ci -t lookout-app-ci .
+
+      - name: Tag image for GHCR
+        run: docker tag lookout-app-ci ghcr.io/${{ github.repository_owner }}/lookout-app-ci:latest
+
+      - name: Log in to GHCR
+        run: echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u coateds --password-stdin
+
+      - name: Push image to GHCR
+        run: docker push ghcr.io/${{ github.repository_owner }}/lookout-app-ci:latest
+
+      - name: Start SQL Server container
+        run: |
+          docker run -d \
+            --name sqlserver \
+            -e SA_PASSWORD='YourStrong!Passw0rd' \
+            -e ACCEPT_EULA=Y \
+            -p 1433:1433 \
+            mcr.microsoft.com/mssql/server:2022-latest
+
+      - name: Wait for SQL Server to be ready
+        run: |
+          for i in {1..10}; do
+            nc -z localhost 1433 && echo "✅ SQL Server is up" && break
+            echo "⏳ Waiting for SQL Server..."
+            sleep 5
+          done
+
+      - name: Patch CI config filename
+        run: mv .devcontainer/devcontainer.ci.json .devcontainer/devcontainer.json
