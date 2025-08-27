@@ -13,7 +13,13 @@ def load_env_config():
     print(f"🔧 Loading config for ENV: {env}")
 
     # Load .env if present
-    load_dotenv(find_dotenv())
+    # load_dotenv(find_dotenv())
+
+    from pathlib import Path
+    load_dotenv(dotenv_path=Path(".env"), override=True)
+
+    print("🔍 SQL_SERVER_USER from os.environ:", os.getenv("SQL_SERVER_USER"))
+    print("🔍 SQL_SERVER_CONTAINER_SERVICE from os.environ:", os.getenv("SQL_SERVER_CONTAINER_SERVICE"))
 
     config = {}
 
