@@ -57,7 +57,7 @@ resolve_secret() {
 # ─────────────────────────────────────────────────────────────
 SQL_SERVER_USER=$(resolve_secret SQL_SERVER_USER "")
 SQL_SERVER_PASSWORD=$(resolve_secret SQL_SERVER_PASSWORD "")
-SQL_SERVER_CONTAINER_SERVICE=$(resolve_secret SQL_SERVER_CONTAINER_SERVICE "localhost")
+SQL_SERVER_CONTAINER_SERVICE=$(resolve_secret SQL_SERVER_CONTAINER_SERVICE "sqlserver")
 
 # ─────────────────────────────────────────────────────────────
 # 🚨 Validate Secrets
