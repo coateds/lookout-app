@@ -83,3 +83,10 @@ jobs:
             done
 
             # pytest
+
+      - name: Curl test "/" route
+        run: |
+          # Wait a bit to ensure the Flask app is up (adjust as needed)
+          sleep 10
+          echo "Curling / route:"
+          curl -v http://localhost:5000/
