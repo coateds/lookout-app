@@ -82,7 +82,14 @@ fi
 echo "🔍 SQL_SERVER_USER: ${SQL_SERVER_USER:-[unset]}"
 echo "🔍 SQL_SERVER_PASSWORD: ${SQL_SERVER_PASSWORD:+[set]}"
 echo "🔍 SQL_SERVER_CONTAINER_SERVICE: ${SQL_SERVER_CONTAINER_SERVICE:-[unset]}"
-echo "🔍 Full URI: $SQLALCHEMY_DATABASE_URI"
+
+if [[ -n "${SQLALCHEMY_DATABASE_URI:-}" ]]; then
+  echo "🔍 SQLALCHEMY_DATABASE_URI: ${SQLALCHEMY_DATABASE_URI}"
+else
+  echo "⚠️ SQLALCHEMY_DATABASE_URI is not set"
+fi
+
+
 
 # ─────────────────────────────────────────────────────────────
 # 🧪 Construct SQLAlchemy URI and Write .env
