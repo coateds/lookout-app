@@ -71,5 +71,15 @@ jobs:
             bash .devcontainer/setup-env.sh
             echo "🔍 .env contents:"
             cat .env
-            # flask db upgrade
+            
+            echo "⏳ Waiting for SQL Server to be reachable..."
+            for i in {1..10}; do
+              if timeout 2 bash -c 'cat < /dev/null > /dev/tcp/sqlserver/1433'; then
+                echo "✅ SQL Server is reachable"
+                break
+              fi
+              echo "⏳ Attempt $i: SQL Server not ready yet"
+              sleep 2
+            done
+
             pytest
