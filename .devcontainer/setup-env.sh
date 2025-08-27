@@ -59,6 +59,9 @@ SQL_SERVER_USER=$(resolve_secret SQL_SERVER_USER "")
 SQL_SERVER_PASSWORD=$(resolve_secret SQL_SERVER_PASSWORD "")
 SQL_SERVER_CONTAINER_SERVICE=$(resolve_secret SQL_SERVER_CONTAINER_SERVICE "sqlserver")
 
+# 🔍 Confirm resolved values
+echo "🔍 SQL_SERVER_CONTAINER_SERVICE resolved as: '${SQL_SERVER_CONTAINER_SERVICE}'"
+
 # ─────────────────────────────────────────────────────────────
 # 🚨 Validate Secrets
 # ─────────────────────────────────────────────────────────────
