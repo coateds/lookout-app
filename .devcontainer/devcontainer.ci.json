@@ -12,5 +12,6 @@
     "FLASK_ENV": "development",
     "PYTHONPATH": "/workspaces/lookout-app"
   },
-  "remoteUser": "vscode"
+  "remoteUser": "vscode",
+  "runServices": ["sqlserver"]
 }
