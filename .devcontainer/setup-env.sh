@@ -5,59 +5,85 @@ echo "🔧 Starting setup-env.sh..."
 
 trap 'echo "❌ setup-env.sh failed at line $LINENO"; exit 1' ERR
 
-# Detect environment
+# ─────────────────────────────────────────────────────────────
+# 🧠 Environment Detection
+# ─────────────────────────────────────────────────────────────
 IS_CODESPACES=${CODESPACES:-false}
 IS_CI=${CI:-false}
+IS_GITHUB_RUNNER=${GITHUB_ACTIONS:-false}
 IS_DEVCONTAINER=false
 
 if grep -q "devcontainer" /proc/1/cgroup || [[ "$PWD" == "/workspaces/"* ]]; then
   IS_DEVCONTAINER=true
 fi
 
-echo "🌐 Environment detection:"
-echo "  - CODESPACES: $IS_CODESPACES"
-echo "  - CI:         $IS_CI"
-echo "  - DEVCONTAINER: $IS_DEVCONTAINER"
-
-
-# Detect CI inside devcontainer (GitHub Actions + devcontainer)
-IS_GITHUB_RUNNER=${GITHUB_ACTIONS:-false}
-
-# Map secrets based on environment
 if [[ "$IS_CODESPACES" == "true" ]]; then
-  SQL_SERVER_USER=${SQL_SERVER_USER_CODESPACES:-""}
-  SQL_SERVER_PASSWORD=${SQL_SERVER_PASSWORD_CODESPACES:-""}
-  SQL_SERVER_CONTAINER_SERVICE=${SQL_SERVER_CONTAINER_SERVICE_CODESPACES:-""}
+  ENVIRONMENT="codespaces"
 elif [[ "$IS_CI" == "true" || "$IS_GITHUB_RUNNER" == "true" || "$IS_DEVCONTAINER" == "true" ]]; then
-  SQL_SERVER_USER=${SQL_SERVER_USER_CI:-${SQL_SERVER_USER_CODESPACES:-""}}
-  SQL_SERVER_PASSWORD=${SQL_SERVER_PASSWORD_CI:-${SQL_SERVER_PASSWORD_CODESPACES:-""}}
-  # SQL_SERVER_CONTAINER_SERVICE=${SQL_SERVER_CONTAINER_SERVICE_CI:-${SQL_SERVER_CONTAINER_SERVICE_CODESPACES:-""}}
-  SQL_SERVER_CONTAINER_SERVICE="localhost"
+  ENVIRONMENT="ci"
 else
-  if [[ -f .secrets ]]; then
-    source .secrets
-  fi
-  SQL_SERVER_USER=${SQL_SERVER_USER:-""}
-  SQL_SERVER_PASSWORD=${SQL_SERVER_PASSWORD:-""}
-  SQL_SERVER_CONTAINER_SERVICE=${SQL_SERVER_CONTAINER_SERVICE:-"localhost"}
+  ENVIRONMENT="local"
 fi
 
-echo "🔍 Using secrets from: ${SQL_SERVER_USER_CI:+CI}${SQL_SERVER_USER_CODESPACES:+Codespaces}${SQL_SERVER_USER:+Local}"
+echo "🌐 Detected environment: $ENVIRONMENT"
 
-# Fail fast if required secrets are missing
+# ─────────────────────────────────────────────────────────────
+# 🔐 Secret Resolution Function
+# ─────────────────────────────────────────────────────────────
+resolve_secret() {
+  local base_name=$1
+  local fallback=$2
+  local value=""
+
+  case "$ENVIRONMENT" in
+    codespaces)
+      value="${base_name}_CODESPACES"
+      ;;
+    ci)
+      value="${base_name}_CI"
+      [[ -z "${!value:-}" ]] && value="${base_name}_CODESPACES"
+      ;;
+    local)
+      [[ -f .secrets ]] && source .secrets
+      value="$base_name"
+      ;;
+  esac
+
+  echo "${!value:-$fallback}"
+}
+
+# ─────────────────────────────────────────────────────────────
+# 🧪 Resolve Secrets
+# ─────────────────────────────────────────────────────────────
+SQL_SERVER_USER=$(resolve_secret SQL_SERVER_USER "")
+SQL_SERVER_PASSWORD=$(resolve_secret SQL_SERVER_PASSWORD "")
+SQL_SERVER_CONTAINER_SERVICE=$(resolve_secret SQL_SERVER_CONTAINER_SERVICE "localhost")
+
+# ─────────────────────────────────────────────────────────────
+# 🚨 Validate Secrets
+# ─────────────────────────────────────────────────────────────
+echo "🔍 Secret summary:"
+echo "  - SQL_SERVER_USER: ${SQL_SERVER_USER:+[set]}"
+echo "  - SQL_SERVER_PASSWORD: ${SQL_SERVER_PASSWORD:+[set]}"
+echo "  - SQL_SERVER_CONTAINER_SERVICE: $SQL_SERVER_CONTAINER_SERVICE"
+
 : "${SQL_SERVER_USER:?❌ SQL_SERVER_USER is not set}"
 : "${SQL_SERVER_PASSWORD:?❌ SQL_SERVER_PASSWORD is not set}"
 : "${SQL_SERVER_CONTAINER_SERVICE:?❌ SQL_SERVER_CONTAINER_SERVICE is not set}"
 
-if [[ -z "${SQL_SERVER_USER:-}" || -z "${SQL_SERVER_PASSWORD:-}" || -z "${SQL_SERVER_CONTAINER_SERVICE:-}" ]]; then
-  echo "⚠️ Required secrets missing. Skipping .env generation."
+# ─────────────────────────────────────────────────────────────
+# 🧼 Guard .env Regeneration
+# ─────────────────────────────────────────────────────────────
+if [[ -f .env && "${FORCE_REGEN:-false}" != "true" ]]; then
+  echo "⚠️ .env already exists. Skipping regeneration."
   exit 0
 fi
 
-# Construct SQLAlchemy URI
+# ─────────────────────────────────────────────────────────────
+# 🧪 Construct SQLAlchemy URI and Write .env
+# ─────────────────────────────────────────────────────────────
 SQLALCHEMY_DATABASE_URI="mssql+pyodbc://${SQL_SERVER_USER}:${SQL_SERVER_PASSWORD}@${SQL_SERVER_CONTAINER_SERVICE}:1433/lookout?driver=ODBC+Driver+18+for+SQL+Server"
 
-# Write to .env
 cat <<EOF > .env
 SQLALCHEMY_DATABASE_URI=${SQLALCHEMY_DATABASE_URI}
 FLASK_ENV=development
