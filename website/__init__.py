@@ -19,7 +19,7 @@ def ensure_database_exists(uri, db_name):
 # db = SQLAlchemy()
 # migrate = Migrate()
 
-config = load_env_config()
+# config = load_env_config()
 
 def create_app(config_override=None):
     app = Flask(__name__)
