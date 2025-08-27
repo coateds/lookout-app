@@ -1,5 +1,8 @@
 import os
 from dotenv import load_dotenv, find_dotenv
+from dotenv import dotenv_values
+print("🔍 .env contents:", dotenv_values(".env"))
+
 
 def get_env(var_name, default=None):
     value = os.getenv(var_name)

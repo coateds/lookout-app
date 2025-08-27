@@ -83,11 +83,7 @@ echo "🔍 SQL_SERVER_USER: ${SQL_SERVER_USER:-[unset]}"
 echo "🔍 SQL_SERVER_PASSWORD: ${SQL_SERVER_PASSWORD:+[set]}"
 echo "🔍 SQL_SERVER_CONTAINER_SERVICE: ${SQL_SERVER_CONTAINER_SERVICE:-[unset]}"
 
-if [[ -n "${SQLALCHEMY_DATABASE_URI:-}" ]]; then
-  echo "🔍 SQLALCHEMY_DATABASE_URI: ${SQLALCHEMY_DATABASE_URI}"
-else
-  echo "⚠️ SQLALCHEMY_DATABASE_URI is not set"
-fi
+
 
 
 
@@ -95,6 +91,12 @@ fi
 # 🧪 Construct SQLAlchemy URI and Write .env
 # ─────────────────────────────────────────────────────────────
 SQLALCHEMY_DATABASE_URI="mssql+pyodbc://${SQL_SERVER_USER}:${SQL_SERVER_PASSWORD}@${SQL_SERVER_CONTAINER_SERVICE}:1433/lookout?driver=ODBC+Driver+18+for+SQL+Server"
+
+if [[ -n "${SQLALCHEMY_DATABASE_URI:-}" ]]; then
+  echo "🔍 SQLALCHEMY_DATABASE_URI: ${SQLALCHEMY_DATABASE_URI}"
+else
+  echo "⚠️ SQLALCHEMY_DATABASE_URI is not set"
+fi
 
 cat <<EOF > .env
 SQLALCHEMY_DATABASE_URI=${SQLALCHEMY_DATABASE_URI}
