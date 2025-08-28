@@ -8,7 +8,7 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    services:
+    # services:
       # Optionally setup SQL Server as a service here, or use Compose for full parity
     steps:
       - uses: actions/checkout@v4
