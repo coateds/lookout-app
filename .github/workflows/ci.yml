@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      # Optionally setup SQL Server as a service here, or use Compose for full parity
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Make setup-env.sh executable
+        run: chmod +x .devcontainer/setup-env.sh
+
+      - name: Run setup-env.sh to create .env
+        run: .devcontainer/setup-env.sh
+        env:
+          SQL_SERVER_USER_CODESPACES: ${{ secrets.SQL_SERVER_USER_CODESPACES }}
+          SQL_SERVER_PASSWORD_CODESPACES: ${{ secrets.SQL_SERVER_PASSWORD_CODESPACES }}
+          SQL_SERVER_CONTAINER_SERVICE_CODESPACES: ${{ secrets.SQL_SERVER_CONTAINER_SERVICE_CODESPACES }}
+
+
+      # - name: Create .env from secrets
+      #   run: |
+      #     echo "SQL_SERVER_USER=${{ secrets.SQL_SERVER_USER_CODESPACES }}" >> .env
+      #     echo "SQL_SERVER_PASSWORD=${{ secrets.SQL_SERVER_PASSWORD_CODESPACES }}" >> .env
+      #     echo "SQL_SERVER_CONTAINER_SERVICE=${{ secrets.SQL_SERVER_CONTAINER_SERVICE_CODESPACES }}" >> .env
+
+      - name: Docker Compose Up
+        run: docker compose up -d --build
+
+      - name: Wait for SQL Server to be ready
+        run: |
+          for i in {1..30}; do
+            if docker exec sqlserver /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'YourStrong!Passw0rd' -Q 'SELECT 1' > /dev/null 2>&1; then
+              echo "SQL Server is ready!"
+              break
+            fi
+            echo "Waiting for SQL Server..."
+            sleep 5
+          done
+
+      - name: Run tests
+        run: docker compose exec flask-app pytest
