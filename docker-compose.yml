@@ -10,7 +10,7 @@ services:
     volumes:
       - .:/workspaces/lookout-app
       - ./.env:/app/.env
-      # - .:/app
+      - .:/app
 
     ports:
       - "5000:5000"
